@@ -1,24 +1,36 @@
-package br.com.marcosrnf.cadastroDeNinjas;
+package br.com.marcosrnf.cadastroDeNinjas.Ninjas;
 
+import br.com.marcosrnf.cadastroDeNinjas.Missoes.MissoesModel;
 import jakarta.persistence.*;
 
-import javax.annotation.processing.Generated;
+import java.util.List;
 
 @Entity
 @Table(name = "tb_cadastro")
 public class NinjaModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
     private String email;
     private int idade;
+    // @ManyToOne - MUITOS ninjas para UMA missão.
+    @ManyToOne
+    @JoinColumn(name = "missoes_id")
+    private MissoesModel missoes;
 
     public NinjaModel(String nome, String email, int idade) {
         this.nome = nome;
         this.email = email;
         this.idade = idade;
+    }
+
+    public NinjaModel(String nome, String email, int idade, MissoesModel missoes) {
+        this.nome = nome;
+        this.email = email;
+        this.idade = idade;
+        this.missoes = missoes;
     }
 
     public NinjaModel(){}
