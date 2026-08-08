@@ -1,6 +1,7 @@
 package br.com.marcosrnf.cadastroDeNinjas.Missoes;
 
 import br.com.marcosrnf.cadastroDeNinjas.Ninjas.NinjaModel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,5 +28,6 @@ public class MissoesModel {
 
     // OneToMany - UMA missão pode ter MUITOS ninjas
     @OneToMany(mappedBy = "missoes")
+    @JsonIgnore
     private List<NinjaModel> ninja;
 }
