@@ -20,8 +20,8 @@ public class NinjaController {
     }
 
     @PostMapping("/criar")
-    public String criarNinja(@RequestBody String ninja){
-        return "Ninja criado com sucesso!" + ninja;
+    public NinjaModel criarNinja(@RequestBody NinjaModel ninja){
+        return ninjaService.criarNinja(ninja);
     }
 
     @GetMapping("/listar")
