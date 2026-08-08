@@ -2,9 +2,17 @@ package br.com.marcosrnf.cadastroDeNinjas.Ninjas;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping
+@RequestMapping("/ninjas")
 public class NinjaController {
+
+    private NinjaService ninjaService;
+
+    public NinjaController(NinjaService ninjaService) {
+        this.ninjaService = ninjaService;
+    }
 
     @GetMapping("/boasvindas")
     public String boasVindas(){
@@ -16,14 +24,14 @@ public class NinjaController {
         return "Ninja criado com sucesso!" + ninja;
     }
 
-    @GetMapping("/buscar-todos")
-    public String buscarTodosOsNinjas(){
-        return "Buscando todos os ninjas...";
+    @GetMapping("/listar")
+    public List<NinjaModel> buscarTodosNinjas(){
+        return ninjaService.listarNinjas();
     }
 
-    @GetMapping("/buscar-por-id/{id}")
-    public String buscarNinjaPorId(@PathVariable Long id){
-        return "Buscando o ninja de ID " + id + "!";
+    @GetMapping("/listar/{id}")
+    public NinjaModel buscarNinjaPorId(@PathVariable Long id){
+        return ninjaService.listarNinjaPorId(id);
     }
 
     @PutMapping("/editar/{id}")
