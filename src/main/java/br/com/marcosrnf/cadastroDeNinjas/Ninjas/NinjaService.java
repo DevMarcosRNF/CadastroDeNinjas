@@ -27,7 +27,24 @@ public class NinjaService {
         return opt.orElse(null);
     }
 
-
+    public NinjaModel editarNinja(NinjaModel ninja, Long id){
+//        Optional<NinjaModel> ninjaModel = ninjaRepository.findById(id);
+//        if(ninjaModel.isPresent()){
+//            NinjaModel ninjaAtualizado = new NinjaModel();
+//            ninjaAtualizado.setId(id);
+//            ninjaAtualizado.setNome(ninja.getNome());
+//            ninjaAtualizado.setEmail(ninja.getEmail());
+//            ninjaAtualizado.setIdade(ninja.getIdade());
+//            ninjaAtualizado.setImgUrl(ninja.getImgUrl());
+//            ninjaAtualizado.setMissoes(ninja.getMissoes());
+//            return ninjaRepository.save(ninjaAtualizado);
+//        }
+        if(ninjaRepository.existsById(id)){
+            ninja.setId(id);
+            ninjaRepository.save(ninja);
+        }
+        return null;
+    }
 
     public void deletarNinjaPorId(Long id){
         ninjaRepository.deleteById(id);
