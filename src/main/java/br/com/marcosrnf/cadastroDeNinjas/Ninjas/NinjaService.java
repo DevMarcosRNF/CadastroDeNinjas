@@ -1,47 +1,51 @@
 package br.com.marcosrnf.cadastroDeNinjas.Ninjas;
 
+import org.aspectj.weaver.NewConstructorTypeMunger;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class NinjaService {
 
     private NinjaRepository ninjaRepository;
+    private NinjaMapper ninjaMapper;
 
-    public NinjaService(NinjaRepository ninjaRepository) {
+    public NinjaService(NinjaRepository ninjaRepository, NinjaMapper ninjaMapper) {
         this.ninjaRepository = ninjaRepository;
+        this.ninjaMapper = ninjaMapper;
     }
 
-    public NinjaModel criarNinja(NinjaModel ninja){
-        return ninjaRepository.save(ninja);
+    public NinjaDTO criarNinja(NinjaDTO ninjaDto){
+        NinjaModel ninja = ninjaMapper.map(ninjaDto);
+        ninja = ninjaRepository.save(ninja);
+        return ninjaMapper.map(ninja);
     }
 
-    public List<NinjaModel> listarNinjas(){
-        return ninjaRepository.findAll();
+    public List<NinjaDTO> listarNinjas(){
+        List<NinjaModel> ninjaModel = ninjaRepository.findAll();
+        return ninjaModel.stream()
+                .map(ninjaMapper::map)
+                .collect(Collectors.toList());
     }
 
-    public NinjaModel listarNinjaPorId(Long id){
+    public NinjaDTO listarNinjaPorId(Long id){
         Optional<NinjaModel> opt = ninjaRepository.findById(id);
-        return opt.orElse(null);
+        if(opt.isPresent()){
+            return ninjaMapper.map(opt.get());
+        }
+        return null;
     }
 
-    public NinjaModel editarNinja(NinjaModel ninja, Long id){
-//        Optional<NinjaModel> ninjaModel = ninjaRepository.findById(id);
-//        if(ninjaModel.isPresent()){
-//            NinjaModel ninjaAtualizado = new NinjaModel();
-//            ninjaAtualizado.setId(id);
-//            ninjaAtualizado.setNome(ninja.getNome());
-//            ninjaAtualizado.setEmail(ninja.getEmail());
-//            ninjaAtualizado.setIdade(ninja.getIdade());
-//            ninjaAtualizado.setImgUrl(ninja.getImgUrl());
-//            ninjaAtualizado.setMissoes(ninja.getMissoes());
-//            return ninjaRepository.save(ninjaAtualizado);
-//        }
-        if(ninjaRepository.existsById(id)){
-            ninja.setId(id);
-            ninjaRepository.save(ninja);
+    public NinjaDTO editarNinja(NinjaDTO ninjaDto, Long id){
+        Optional<NinjaModel> ninjaModel = ninjaRepository.findById(id);
+        if(ninjaModel.isPresent()){
+            NinjaModel ninjaAtualizado = ninjaMapper.map(ninjaDto);
+            ninjaAtualizado.setId(id);
+            NinjaModel ninjaSalvo = ninjaRepository.save(ninjaAtualizado);
+            return ninjaMapper.map(ninjaSalvo);
         }
         return null;
     }
